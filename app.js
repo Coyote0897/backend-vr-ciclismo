@@ -15,7 +15,7 @@ conectarDB();
 app.use("/api/resultados", resultadoRoutes);
 
 app.get("/", (req, res) => {
-  res.send("🚴 Backend de VR Ciclismo funcionando correctamente");
+  res.send("Backend de VR Ciclismo funcionando correctamente");
 });
 
 const PORT = process.env.PORT || 5000;
