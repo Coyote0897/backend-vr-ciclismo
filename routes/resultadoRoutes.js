@@ -1,10 +1,15 @@
 import express from "express";
-import { crearResultado, obtenerResultados } from "../controllers/resultadoController.js";
+import {
+  crearResultadoKilometro,
+  obtenerResultados
+} from "../controllers/resultadoController.js";
 
 const router = express.Router();
 
-router.route("/")
-  .get(obtenerResultados)
-  .post(crearResultado);
+// Obtener todos los resultados
+router.get("/", obtenerResultados);
+
+// Nuevo endpoint especial para Unity
+router.post("/kilometro", crearResultadoKilometro);
 
 export default router;
