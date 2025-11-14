@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import conectarDB from "./config/db.js";
 import resultadoRoutes from "./routes/resultadoRoutes.js";
+import persecucionRoutes from "./routes/persecucionRoutes.js";
+
 
 dotenv.config();
 const app = express();
@@ -13,6 +15,8 @@ app.use(express.json());
 conectarDB();
 
 app.use("/api/resultados", resultadoRoutes);
+app.use("/api/persecucion", persecucionRoutes);
+
 
 app.get("/", (req, res) => {
   res.send("Backend de VR Ciclismo funcionando correctamente");
