@@ -17,35 +17,37 @@ const app = express();
 
 conectarDB();
 
-// Seguridad básica
+// Seguridad recomendada
 app.use(helmet());
 
-// Si tu frontend está en otro dominio, por ejemplo http://localhost:5173:
+// CORS - Permitir FRONTEND Y UNITY
 app.use(
   cors({
-    origin: "http://localhost:5173", // cambia según tu frontend
-    credentials: true, // para enviar cookies
+    origin: "*",     // 👉 Acceso libre como antes
+    credentials: false
   })
 );
 
 app.use(express.json());
 app.use(cookieParser());
 
-// Rate limit sólo para /api/auth (proteger login de fuerza bruta)
+// Rate limit solo para LOGIN
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 20, // máximo 20 intentos
-  message: "Demasiados intentos, inténtalo más tarde.",
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: "Demasiados intentos de login. Intenta más tarde.",
 });
 
+// 👉 SOLO LOGIN protegido
 app.use("/api/auth", authLimiter, authRoutes);
 
-app.use("/api/resultados", resultadoRoutes);
-app.use("/api/persecucion", persecucionRoutes);
-app.use("/api/velocidad200", velocidad200Routes);
+// 👉 TODAS LAS PRUEBAS SIGUEN PÚBLICAS (como antes)
+app.use("/api/resultados", resultadoRoutes);     // público
+app.use("/api/persecucion", persecucionRoutes);  // público
+app.use("/api/velocidad200", velocidad200Routes); // público
 
 app.get("/", (req, res) => {
-  res.send("Ciclismo");
+  res.send("Backend VR Ciclismo funcionando correctamente.");
 });
 
 const PORT = process.env.PORT || 5000;
