@@ -41,10 +41,10 @@ const authLimiter = rateLimit({
 // 👉 SOLO LOGIN protegido
 app.use("/api/auth", authLimiter, authRoutes);
 
-// 👉 TODAS LAS PRUEBAS SIGUEN PÚBLICAS (como antes)
-app.use("/api/resultados", resultadoRoutes);     // público
-app.use("/api/persecucion", persecucionRoutes);  // público
-app.use("/api/velocidad200", velocidad200Routes); // público
+
+app.use("/api/resultados", resultadoRoutes);     
+app.use("/api/persecucion", persecucionRoutes);  
+app.use("/api/velocidad200", velocidad200Routes); 
 
 app.get("/", (req, res) => {
   res.send("Backend VR Ciclismo funcionando correctamente.");
