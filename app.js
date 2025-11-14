@@ -13,43 +13,55 @@ import velocidad200Routes from "./routes/velocidad200Routes.js";
 import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
+
 const app = express();
 
+// Necesario para evitar error X-Forwarded-For en Render
+app.set("trust proxy", 1);
+
+// Conexión a MongoDB
 conectarDB();
 
 // Seguridad recomendada
 app.use(helmet());
 
-// CORS - Permitir FRONTEND Y UNITY
+// CORS — público (para React, Unity, web)
 app.use(
   cors({
-    origin: "*",     // 👉 Acceso libre como antes
-    credentials: false
+    origin: "*",   // acceso libre
+    credentials: false,
   })
 );
 
+// Middleware útiles
 app.use(express.json());
 app.use(cookieParser());
 
-// Rate limit solo para LOGIN
+// Rate limit SOLO en login (evita fuerza bruta)
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  message: "Demasiados intentos de login. Intenta más tarde.",
+  windowMs: 15 * 60 * 1000,   // 15 minutos
+  max: 20,                     // máximo 20 intentos
+  standardHeaders: true,       // respuestas en headers estándar
+  legacyHeaders: false,        // oculta X-RateLimit headers viejos
+  message: {
+    message: "Demasiados intentos de login. Intenta más tarde."
+  }
 });
 
-// 👉 SOLO LOGIN protegido
+// Endpoints protegidos SOLO para auth
 app.use("/api/auth", authLimiter, authRoutes);
 
+// Endpoints de pruebas — ⚠️ PÚBLICOS (como antes)
+app.use("/api/resultados", resultadoRoutes);
+app.use("/api/persecucion", persecucionRoutes);
+app.use("/api/velocidad200", velocidad200Routes);
 
-app.use("/api/resultados", resultadoRoutes);     
-app.use("/api/persecucion", persecucionRoutes);  
-app.use("/api/velocidad200", velocidad200Routes); 
-
+// Endpoint raíz
 app.get("/", (req, res) => {
   res.send("Backend VR Ciclismo funcionando correctamente.");
 });
 
+// Servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
