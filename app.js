@@ -45,7 +45,7 @@ app.use("/api/persecucion", persecucionRoutes);
 app.use("/api/velocidad200", velocidad200Routes);
 
 app.get("/", (req, res) => {
-  res.send("Backend de VR Ciclismo");
+  res.send("Ciclismo");
 });
 
 const PORT = process.env.PORT || 5000;
