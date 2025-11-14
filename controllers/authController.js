@@ -7,7 +7,7 @@ const generarToken = (usuarioId, rol) => {
   return jwt.sign(
     { uid: usuarioId, rol },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" } // token de 1 hora
+    { expiresIn: "1h" } // token válido por 1 hora
   );
 };
 
@@ -45,6 +45,7 @@ export const registrarUsuario = async (req, res) => {
         rol: nuevoUsuario.rol,
       },
     });
+
   } catch (error) {
     console.error("Error en registrarUsuario:", error);
     res.status(500).json({ message: "Error en el servidor" });
@@ -73,16 +74,18 @@ export const loginUsuario = async (req, res) => {
 
     const token = generarToken(usuario._id, usuario.rol);
 
-    // ✅ Enviar token en cookie segura (mejor para seguridad)
+    // ⭐ OPCIONAL: cookie httpOnly (seguridad extra)
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // en prod: solo HTTPS
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 60 * 60 * 1000, // 1 hora
+      maxAge: 60 * 60 * 1000,
     });
 
-    res.json({
+    // ⭐ RESPUESTA FINAL (token incluido - NECESARIO PARA FRONTEND)
+    return res.json({
       message: "Inicio de sesión correcto",
+      token, // <- 🔥 ESTO ES LO QUE NECESITAS
       usuario: {
         id: usuario._id,
         nombre: usuario.nombre,
@@ -90,6 +93,7 @@ export const loginUsuario = async (req, res) => {
         rol: usuario.rol,
       },
     });
+
   } catch (error) {
     console.error("Error en loginUsuario:", error);
     res.status(500).json({ message: "Error en el servidor" });
@@ -102,14 +106,17 @@ export const logoutUsuario = (req, res) => {
   res.json({ message: "Sesión cerrada correctamente" });
 };
 
-// PERFIL (para probar auth)
+// PERFIL (requiere token)
 export const perfilUsuario = async (req, res) => {
   try {
     const usuario = await Usuario.findById(req.usuarioId).select("-password");
+
     if (!usuario) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
+
     res.json(usuario);
+
   } catch (error) {
     console.error("Error en perfilUsuario:", error);
     res.status(500).json({ message: "Error en el servidor" });
