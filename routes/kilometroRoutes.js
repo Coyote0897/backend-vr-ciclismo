@@ -2,7 +2,7 @@ import express from "express";
 import {
   crearResultadoKilometro,
   obtenerResultados
-} from "../controllers/resultadoController.js";
+} from "../controllers/kilometroController.js";
 
 const router = express.Router();
 

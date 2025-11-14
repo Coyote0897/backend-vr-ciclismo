@@ -1,4 +1,4 @@
-import Resultado from "../models/resultadoModel.js";
+import Resultado from "../models/kilometroModel.js";
 
 export const crearResultadoKilometro = async (req, res) => {
   try {
