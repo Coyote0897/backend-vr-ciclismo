@@ -11,6 +11,7 @@ import resultadoRoutes from "./routes/kilometroRoutes.js";
 import persecucionRoutes from "./routes/persecucionRoutes.js";
 import velocidad200Routes from "./routes/velocidad200Routes.js";
 import authRoutes from "./routes/authRoutes.js";
+import adminPruebaRoutes from "./routes/adminPruebaRoutes.js";
 
 
 dotenv.config();
@@ -56,6 +57,7 @@ app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/resultados", resultadoRoutes);
 app.use("/api/persecucion", persecucionRoutes);
 app.use("/api/velocidad200", velocidad200Routes);
+app.use("/api/admin/pruebas", adminPruebaRoutes);
 
 // Endpoint raíz
 app.get("/", (req, res) => {
