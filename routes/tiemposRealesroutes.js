@@ -8,7 +8,7 @@ import {
   eliminarTiempoReal,
 } from "../controllers/tiemposRealesController.js";
 
-import { authMiddleware, requiereRol } from "../middlewares/authMiddleware.js";
+import { authMiddleware, requiereRol } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
